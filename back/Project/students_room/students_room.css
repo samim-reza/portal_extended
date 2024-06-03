@@ -1,0 +1,78 @@
+body {
+  display: flex;
+}
+.logo {
+  height: 100px;
+}
+.chatbox {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+}
+.chatbox-messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+}
+.chatbox-input {
+  padding: 10px;
+}
+.message {
+  padding: 10px;
+  border-radius: 5px;
+  margin: 5px 0;
+  max-width: 75%;
+  display: flex;
+  align-items: center;
+}
+.message-sent {
+  background-color: #d1e7dd;
+  align-self: flex-end;
+}
+.message-received {
+  background-color: #f8d7da;
+  align-self: flex-start;
+}
+.head-symbol {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+}
+#sidebar {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  background-color: #343a40;
+  color: #fff;
+  padding-top: 20px;
+  transition: margin-left 0.3s;
+}
+#sidebar.active {
+  margin-left: -250px;
+}
+#sidebar .sidebar-item {
+  padding: 10px 20px;
+  display: block;
+  color: #fff;
+  text-decoration: none;
+}
+#sidebar .sidebar-item:hover {
+  background-color: #495057;
+}
+#content {
+  margin-left: 250px;
+  padding: 20px;
+  width: calc(100% - 250px);
+  transition: margin-left 0.3s;
+}
+#content.active {
+  margin-left: 0;
+  width: 100%;
+}

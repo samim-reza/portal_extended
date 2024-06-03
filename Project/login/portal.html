@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Portal</title>
+  <link rel="icon" href="./logogub.png" type="image/x-icon">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="portal.css">
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <nav id="sidebar" class="bg-dark overflow-auto">
+        <ul class="list-unstyled components">
+          <li><a href="#" class="sidebar-item">Home</a></li>
+          <li><a href="#" class="sidebar-item">Result History</a></li>
+          <li><a href="#" class="sidebar-item">Bill History</a></li>
+          <li><a href="#" class="sidebar-item">Course Evaluation</a></li>
+          <li><a href="#" class="sidebar-item">Pre-registration (Retake)</a></li>
+          <li><a href="#" class="sidebar-item">Pre-registration</a></li>
+          <li><a href="#" class="sidebar-item">Registration Confirmation</a></li>
+          <li><a href="#" class="sidebar-item">Profile</a></li>
+          <li class="nav-item dropdown">
+            <a href="#" class="sidebar-item dropdown-toggle" id="tscDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">TSCR</a>
+            <div class="dropdown-menu" aria-labelledby="tscDropdown">
+              <!-- Dynamic course items will be added here -->
+            </div>
+          </li>
+          <li><a href="#" class="sidebar-item">Class Routine</a></li>
+          <li><a href="#" class="sidebar-item">Password Change</a></li>
+          <li><a href="#" class="sidebar-item">Course Drop</a></li>
+          <li><a href="#" class="sidebar-item">Semester Drop</a></li>
+          <li><a href="#" class="sidebar-item">Student Program Change</a></li>
+          <li><a href="#" class="sidebar-item">Student Ledger</a></li>
+          <li><a href="#" class="sidebar-item">Student Admit Card</a></li>
+          <li><a href="#" class="sidebar-item">Student Special Exam Apply</a></li>
+          <li><a href="#" class="sidebar-item">Student Exam Routine</a></li>
+          <li><a href="#" class="sidebar-item">Teams User ID Password</a></li>
+          <input class="btn w-100 btn-primary" type="submit" value="Logout">
+        </ul>
+      </nav>
+      <div id="content" class="col">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <button type="button" id="sidebarCollapse" class="btn btn-info">
+            <i class="navbar-toggler-icon"></i>
+          </button>
+          <img class="logo p-2" src="./logogub.png" alt="Coming">
+          <h2 class="p-3">Green University of Bangladesh</h2>
+        </nav>
+        <h1 class="mt-4">Welcome to GUB Student Portal</h1> 
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="portal-script.js"></script>
+</body>
