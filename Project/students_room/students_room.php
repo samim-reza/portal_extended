@@ -7,27 +7,67 @@ $database = "portal_extended";
 $conn = new mysqli($servername, $db_username, $db_password, $database);
 
 if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
 $course_id = $_GET['course_id'] ?? null;
+$student_id = $_GET['studentid'] ?? null;
 $course_name = "";
+$chat_room_id = null;
 
-if ($course_id) {
-  $stmt = $conn->prepare("SELECT course_name FROM Courses WHERE course_id = ?");
-  $stmt->bind_param("i", $course_id);
-  $stmt->execute();
-  $stmt->bind_result($course_name);
-  $stmt->fetch();
-  $stmt->close();
+if ($course_id && $student_id) {
+    // Retrieve the course name
+    $stmt = $conn->prepare("SELECT course_name FROM Courses WHERE course_id = ?");
+    $stmt->bind_param("i", $course_id);
+    $stmt->execute();
+    $stmt->bind_result($course_name);
+    $stmt->fetch();
+    $stmt->close();
+
+    // Retrieve the chat room ID based on the course ID
+    $stmt = $conn->prepare("SELECT chat_room_id FROM ChatRooms WHERE course_id = ?");
+    $stmt->bind_param("i", $course_id);
+    $stmt->execute();
+    $stmt->bind_result($chat_room_id);
+    $stmt->fetch();
+    $stmt->close();
+
+    if (!$chat_room_id) {
+        die("Chat room not found");
+    }
+
+    // Retrieve the user ID based on the student ID
+    $stmt = $conn->prepare("SELECT user_id FROM Users WHERE student_id = ?");
+    $stmt->bind_param("i", $student_id);
+    $stmt->execute();
+    $stmt->bind_result($sender_id);
+    $stmt->fetch();
+    $stmt->close();
+
+    if (!$sender_id) {
+        die("User not found");
+    }
+
+    // Retrieve messages for the chat room
+    $messages = [];
+    $stmt = $conn->prepare("SELECT content, sent_at, (SELECT username FROM Users WHERE user_id = sender_id) AS sender FROM Messages WHERE chat_room_id = ? AND chat_room = 2");
+    $stmt->bind_param("i", $chat_room_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $messages[] = $row;
+    }
+    $stmt->close();
+} else {
+    die($course_id);
 }
-
 
 $conn->close();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,14 +76,15 @@ $conn->close();
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="students_room.css">
 </head>
+
 <body>
   <div id="sidebar" class="bg-dark">
     <ul class="list-unstyled components">
-      <li><a href="#" id="home-link" class="sidebar-item">Home</a></li>
-      <li><a  id="teacher-room-link" class="teacher-room sidebar-item">Teacher's Room</a></li>
-      <li><a  id="student-corner-link" class="student-corner sidebar-item">Student's Corner</a></li>
+      <li><a href="#" class="sidebar-item">Home</a></li>
+      <li><a class="teacher-room sidebar-item">Teacher's Room</a></li>
+      <li><a class="student-corner sidebar-item">Student's Corner</a></li>
       <li>
-        <form action="/logout" method="POST" id="logout-form">
+        <form action="/logout" method="POST">
           <input class="btn w-100 btn-primary mt-3" type="submit" value="Logout">
         </form>
       </li>
@@ -58,10 +99,17 @@ $conn->close();
       <h2 class="p-3">Green University of Bangladesh</h2>
     </nav>
     <div class="chatbox mt-4">
-      <div class="chatbox-messages" id="chatbox-messages"></div>
+      <div class="chatbox-messages" id="chatbox-messages">
+        <?php foreach ($messages as $message): ?>
+          <div class="message">
+            <img class="head-symbol" src="student.png" alt="Sender">
+            <span><?= htmlspecialchars($message['sender']) ?>: <?= htmlspecialchars($message['content']) ?> (<?= htmlspecialchars($message['sent_at']) ?>)</span>
+          </div>
+        <?php endforeach; ?>
+      </div>
       <div class="chatbox-input">
         <div class="input-group">
-          <input type="text" class="form-control" id="chat-input" placeholder="Type message for <?= $course_name ?>">
+          <input type="text" class="inbox form-control" id="chat-input" placeholder="Type message for <?= htmlspecialchars($course_name) ?>">
           <div class="input-group-append">
             <button class="btn btn-primary" id="send-btn" type="button">Send</button>
           </div>
@@ -74,4 +122,5 @@ $conn->close();
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="students_room.js"></script>
 </body>
+
 </html>

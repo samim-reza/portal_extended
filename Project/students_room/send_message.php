@@ -15,9 +15,9 @@ if ($conn->connect_error) {
 }
 
 $course_id = $_POST['course_id'];
-$sender_id = $_POST['sender_id'];
+$sender_id = $_POST['sender_id']; // Assuming sender_id is actually student_id
 $content = $_POST['content'];
-$chat_room = 1;
+$chat_room = 2;
 
 
 // Fetch the user ID using the sender ID (which is the student ID)

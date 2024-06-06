@@ -26,7 +26,7 @@ $(document).ready(function() {
       if (message.trim() === '') return;
 
       $.ajax({
-          url: '/Project/faculty_room/send_message.php',
+          url: `/Project/faculty_room/send_message.php?chat_room=${1}`,
           method: 'POST',
           data: {
               course_id: course_id,

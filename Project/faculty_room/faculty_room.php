@@ -50,7 +50,7 @@ if ($course_id && $student_id) {
 
     // Retrieve messages for the chat room
     $messages = [];
-    $stmt = $conn->prepare("SELECT content, sent_at, (SELECT username FROM Users WHERE user_id = sender_id) AS sender FROM Messages WHERE chat_room_id = ?");
+    $stmt = $conn->prepare("SELECT content, sent_at, (SELECT username FROM Users WHERE user_id = sender_id) AS sender FROM Messages WHERE chat_room_id = ? AND chat_room = 1");
     $stmt->bind_param("i", $chat_room_id);
     $stmt->execute();
     $result = $stmt->get_result();
