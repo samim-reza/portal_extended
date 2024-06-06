@@ -49,9 +49,9 @@ $(document).ready(function() {
       }
     });
   
-    var studentpage = '/Project/students_room/students_room.php?course_id=' + courseId + '&studentid=' + studentId;
+    var studentpage = `/Project/students_room/students_room.php?course_id=${courseId}&studentid=${studentId}`;
     $('.student-corner').attr('href', studentpage);
-    var teacherpage = '/Project/faculty_room/faculty_room.php?course_id=' + courseId + '&studentid=' + studentId;
+    var teacherpage = `/Project/faculty_room/faculty_room.php?course_id=${courseId}&studentid=${studentId}`;
     $('.teacher-room').attr('href', teacherpage);
   
     $.ajax({

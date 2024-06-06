@@ -1,4 +1,8 @@
 <?php
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
+
 $servername = "localhost";
 $db_username = "root";
 $db_password = "S@mim101";
@@ -10,24 +14,40 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$chat_room = $_GET['chat_room'] ?? null;
-$course_id = $_GET['course_id'] ?? null;
+$course_id = $_POST['course_id'];
+$sender_id = $_POST['sender_id'];
+$content = $_POST['content'];
+$chat_room = 2;
 
-if ($chat_room && $course_id) {
-    $messages = [];
-    $stmt = $conn->prepare("SELECT content, sent_at, sender_id, (SELECT username FROM Users WHERE user_id = sender_id) AS sender FROM Messages WHERE chat_room_id = ? AND chat_room = 2");
-    $stmt->bind_param("i", $chat_room);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    while ($row = $result->fetch_assoc()) {
-        $messages[] = $row;
-    }
-    $stmt->close();
 
-    echo json_encode($messages);
-} else {
-    echo json_encode([]);
+// Fetch the user ID using the sender ID (which is the student ID)
+$stmt = $conn->prepare("SELECT user_id FROM Users WHERE student_id = ?");
+$stmt->bind_param("i", $sender_id);
+$stmt->execute();
+$stmt->bind_result($user_id);
+$stmt->fetch();
+$stmt->close();
+
+if (!$user_id) {
+    die("User not found");
+}
+// Fetch the chat room ID using the course ID
+$stmt = $conn->prepare("SELECT chat_room_id FROM ChatRooms WHERE course_id = ?");
+$stmt->bind_param("i", $course_id);
+$stmt->execute();
+$stmt->bind_result($chat_room_id);
+$stmt->fetch();
+$stmt->close();
+
+if (!$chat_room_id) {
+    die("Chat room not found");
 }
 
+// Insert the new message using the fetched user ID
+$stmt = $conn->prepare("INSERT INTO Messages (chat_room_id, sender_id, content, chat_room) VALUES (?, ?, ?, $chat_room)");
+$stmt->bind_param("iis", $chat_room_id, $user_id, $content);
+$stmt->execute();
+
+$stmt->close();
 $conn->close();
 ?>

@@ -103,8 +103,10 @@ $conn->close();
       <div class="chatbox-messages" id="chatbox-messages">
         <?php foreach ($messages as $message): ?>
           <div class="message <?= $message['is_sender'] ? 'message-sent' : 'message-received' ?>">
-            <img class="head-symbol" src="student.png" alt="Sender">
-            <span><?= htmlspecialchars($message['sender']) ?>: <?= htmlspecialchars($message['content']) ?> (<?= htmlspecialchars($message['sent_at']) ?>)</span>
+            <img class="head-symbol" src="<?= $message['is_sender'] ? 'student.png' : 'student.png' ?>" alt="Sender">
+            <span><?= htmlspecialchars($message['sender']) ?>: <?= htmlspecialchars($message['content']) ?>
+              <span class="message-time"><?= htmlspecialchars($message['sent_at']) ?></span>
+            </span>
           </div>
         <?php endforeach; ?>
       </div>

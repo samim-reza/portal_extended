@@ -32,6 +32,7 @@ body {
   max-width: 75%;
   display: flex;
   align-items: center;
+  position: relative;
 }
 .message-sent {
   background-color: #d1e7dd;
@@ -51,6 +52,17 @@ body {
 .message-sent .head-symbol {
   margin-right: 0;
   margin-left: 10px;
+}
+.message-time {
+  display: none;
+  position: absolute;
+  bottom: -15px;
+  right: 0;
+  font-size: 0.8em;
+  color: #555;
+}
+.message:hover .message-time {
+  display: block;
 }
 #sidebar {
   height: 100vh;
