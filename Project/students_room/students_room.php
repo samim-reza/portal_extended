@@ -40,21 +40,22 @@ if ($course_id && $student_id) {
     $stmt = $conn->prepare("SELECT user_id FROM Users WHERE student_id = ?");
     $stmt->bind_param("i", $student_id);
     $stmt->execute();
-    $stmt->bind_result($sender_id);
+    $stmt->bind_result($logged_in_user_id);
     $stmt->fetch();
     $stmt->close();
 
-    if (!$sender_id) {
+    if (!$logged_in_user_id) {
         die("User not found");
     }
 
     // Retrieve messages for the chat room
     $messages = [];
-    $stmt = $conn->prepare("SELECT content, sent_at, (SELECT username FROM Users WHERE user_id = sender_id) AS sender FROM Messages WHERE chat_room_id = ? AND chat_room = 2");
+    $stmt = $conn->prepare("SELECT content, sent_at, sender_id, (SELECT username FROM Users WHERE user_id = sender_id) AS sender FROM Messages WHERE chat_room_id = ? AND chat_room = 2");
     $stmt->bind_param("i", $chat_room_id);
     $stmt->execute();
     $result = $stmt->get_result();
     while ($row = $result->fetch_assoc()) {
+        $row['is_sender'] = $row['sender_id'] == $logged_in_user_id;
         $messages[] = $row;
     }
     $stmt->close();
@@ -101,7 +102,7 @@ $conn->close();
     <div class="chatbox mt-4">
       <div class="chatbox-messages" id="chatbox-messages">
         <?php foreach ($messages as $message): ?>
-          <div class="message">
+          <div class="message <?= $message['is_sender'] ? 'message-sent' : 'message-received' ?>">
             <img class="head-symbol" src="student.png" alt="Sender">
             <span><?= htmlspecialchars($message['sender']) ?>: <?= htmlspecialchars($message['content']) ?> (<?= htmlspecialchars($message['sent_at']) ?>)</span>
           </div>

@@ -4,7 +4,6 @@ $(document).ready(function() {
       $('#content').toggleClass('active');
   });
 
-
   var urlParams = new URLSearchParams(window.location.search);
   var courseId = urlParams.get('course_id');
   var studentId = urlParams.get('studentid');
@@ -14,11 +13,17 @@ $(document).ready(function() {
   function addMessage(message, type) {
       var messageElement = $('<div>').addClass('message').addClass(type);
       var headSymbol = $('<img>').addClass('head-symbol').attr('src', type === 'message-sent' ? '/Project/students_room/student.png' : 'faculty.png');
-      var messageText = $('<span>').text(message);
+      var messageText = $('<span>').text(message.content);
+      var messageTime = $('<span>').addClass('message-time').text(message.sent_at).hide();
 
-      messageElement.append(headSymbol).append(messageText);
+      messageElement.append(headSymbol).append(messageText).append(messageTime);
       $('#chatbox-messages').append(messageElement);
       $('#chatbox-messages').scrollTop($('#chatbox-messages')[0].scrollHeight);
+
+      messageElement.hover(
+        function() { messageTime.show(); },
+        function() { messageTime.hide(); }
+      );
   }
 
   $('#send-btn').click(function() {
@@ -34,7 +39,7 @@ $(document).ready(function() {
               content: message
           },
           success: function(response) {
-              addMessage(message, 'message-sent');
+              addMessage({ content: message, sent_at: new Date().toLocaleString() }, 'message-sent');
               $('#chat-input').val('');
           },
           error: function(error) {
@@ -53,4 +58,18 @@ $(document).ready(function() {
   $('.student-corner').attr('href', studentpage);
   var teacherpage = '/Project/faculty_room/faculty_room.php?course_id=' + courseId + '&studentid=' + studentId;
   $('.teacher-room').attr('href', teacherpage);
+
+  // Fetch existing messages
+  $.ajax({
+      url: `/Project/faculty_room/get_messages.php?chat_room=2&course_id=${course_id}`,
+      method: 'GET',
+      success: function(messages) {
+          messages.forEach(function(message) {
+              addMessage(message, message.sender_id === senderId ? 'message-sent' : 'message-received');
+          });
+      },
+      error: function(error) {
+          console.error('Error:', error);
+      }
+  });
 });

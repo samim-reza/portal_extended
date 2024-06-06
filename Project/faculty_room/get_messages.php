@@ -15,7 +15,7 @@ $course_id = $_GET['course_id'] ?? null;
 
 if ($chat_room && $course_id) {
     $messages = [];
-    $stmt = $conn->prepare("SELECT content, sent_at, sender_id, (SELECT username FROM Users WHERE user_id = sender_id) AS sender FROM Messages WHERE chat_room_id = ? AND chat_room = 2");
+    $stmt = $conn->prepare("SELECT content, sent_at, sender_id, (SELECT username FROM Users WHERE user_id = sender_id) AS sender FROM Messages WHERE chat_room_id = ? AND chat_room = 1");
     $stmt->bind_param("i", $chat_room);
     $stmt->execute();
     $result = $stmt->get_result();
