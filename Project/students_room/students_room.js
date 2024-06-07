@@ -3,7 +3,9 @@ $(document).ready(function() {
       $('#sidebar').toggleClass('active');
       $('#content').toggleClass('active');
     });
-  
+    
+    $('#chatbox-messages').scrollTop($('#chatbox-messages')[0].scrollHeight);
+
     var urlParams = new URLSearchParams(window.location.search);
     var courseId = urlParams.get('course_id');
     var studentId = urlParams.get('studentid');
