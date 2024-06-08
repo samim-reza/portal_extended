@@ -60,6 +60,7 @@ body {
   right: 0;
   font-size: 0.8em;
   color: #555;
+  white-space: nowrap;
 }
 .message:hover .message-time {
   display: block;

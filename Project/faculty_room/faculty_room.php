@@ -1,4 +1,12 @@
 <?php
+session_start();
+if (!isset($_SESSION['student_id'])) {
+  header('Location: /Project/login/login.html');
+  exit();
+}
+header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+
 $servername = "localhost";
 $db_username = "root";
 $db_password = "S@mim101";
@@ -81,12 +89,12 @@ $conn->close();
 <body>
   <div id="sidebar" class="bg-dark">
     <ul class="list-unstyled components">
-      <li><a href="#" class="sidebar-item">Home</a></li>
+      <li><a class="home sidebar-item" onclick="home()">Home</a></li>
       <li><a class="teacher-room sidebar-item">Teacher's Room</a></li>
       <li><a class="student-corner sidebar-item">Student's Corner</a></li>
       <li>
-        <form action="/logout" method="POST">
-          <input class="btn w-100 btn-primary mt-3" type="submit" value="Logout">
+        <form action="/logout" >
+          <input class="btn w-100 btn-primary mt-3" type="submit" onclick="logout()" value="Logout">
         </form>
       </li>
     </ul>

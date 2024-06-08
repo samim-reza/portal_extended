@@ -55,6 +55,12 @@ $(document).ready(function() {
     $('.student-corner').attr('href', studentpage);
     var teacherpage = `/Project/faculty_room/faculty_room.php?course_id=${courseId}&studentid=${studentId}`;
     $('.teacher-room').attr('href', teacherpage);
+    // var home = `/Project/login/portal.php?studentid=${studentId}`;
+    // $('.home').attr('href', home);
+        // Home button click handler
+      //   $('.home').on('click', function() {
+      //     window.location.href = `/Project/login/portal.php?studentid=${studentId}`;
+      // });
   
     $.ajax({
       url: `/Project/faculty_room/check_role.php?course_id=${courseId}&student_id=${studentId}`,
@@ -87,4 +93,42 @@ $(document).ready(function() {
       }
     });
   });
+
+  function home() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var studentId = urlParams.get('studentid');
+        $.ajax({
+          type: "POST",
+          url: "/Project/login/login.php",
+          data: {
+              id: studentId,
+              // password: password
+          },
+            success: function (response) {
+                //alert(response);
+                    window.location.href = `/Project/login/portal.html?studentid=${studentId}`;
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+}
+
+function logout() {
+  $.ajax({
+      type: "POST",
+      url: "logout.php",
+      success: function (response) {
+          console.log("Response from server:", response);
+          if (response === "success") {
+              window.location.href = "/Project/login/login.html";
+          } else {
+              console.error("Error logging out:", response);
+          }
+      },
+      error: function (xhr, status, error) {
+          console.error("Error logging out:", xhr.responseText);
+      }
+  });
+}
   

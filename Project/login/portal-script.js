@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#content').toggleClass('active');
     });
 
+
     fetchCourses();
 
     function fetchCourses() {
@@ -11,10 +12,10 @@ document.addEventListener('DOMContentLoaded', function () {
             type: "GET",
             url: "portal.php",
             success: function (response) {
-                console.log("Response from server:", response); // Log the response
+                console.log("Response from server:", response);
                 try {
                     const courses = JSON.parse(response);
-                    console.log("Parsed courses:", courses); // Log the parsed courses
+                    console.log("Parsed courses:", courses);
                     if (Array.isArray(courses)) {
                         populateDropdown(courses);
                     } else {
@@ -48,3 +49,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+
+function logout() {
+    $.ajax({
+        type: "POST",
+        url: "logout.php",
+        success: function (response) {
+            console.log("Response from server:", response);
+            if (response === "success") {
+                window.location.href = "/Project/login/login.html";
+            } else {
+                console.error("Error logging out:", response);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error logging out:", xhr.responseText);
+        }
+    });
+}

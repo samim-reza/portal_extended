@@ -19,7 +19,7 @@ function validateForm() {
             success: function (response) {
                 //alert(response);
                 if (response === "success") {
-                    window.location.href = "portal.html?studentid=" + studentid;
+                    window.location.href = `portal.html?studentid=${studentid}`;
                 } else {
                     alert("Invalid ID or password.");
                 }
